@@ -18,16 +18,15 @@ def shuffle(n, rng):
         rng.shuffle(selection)
         while selection:
             i = 1
-            while i < len(selection) and selection[i] == selection[0]:
+            first = selection[0]
+            while i < len(selection) and selection[i] == first:
                 i += 1
-            pile = 'A' if selection[0] else 'B'
-            print('{0} to {1}'.format(i, pile), end='')
-            selection = selection[i:]
             try:
-                input()
+                input('{0} to {1}'.format(i, 'A' if first else 'B'))
             except EOFError:
                 print()
                 sys.exit()
+            selection = selection[i:]
         shuffle(aCards, rng)
         shuffle(bCards, rng)
 
