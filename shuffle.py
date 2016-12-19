@@ -13,9 +13,7 @@ def shuffle(n, rng):
     if n > 1:
         print('Take pile of {0} cards.'.format(n))
         aCards = n // 2
-        bCards = aCards
-        if n % 2:
-            bCards += 1
+        bCards = aCards + n % 2
         selection = [True] * aCards + [False] * bCards
         rng.shuffle(selection)
         while selection:
