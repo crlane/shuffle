@@ -9,7 +9,7 @@ def badArgument():
     sys.exit(1)
 
 
-def shuffle(n, rng):
+def shuffle(rng, n):
     if n > 1:
         print('Take pile of {0} cards.'.format(n))
         aCards = n // 2
@@ -27,8 +27,8 @@ def shuffle(n, rng):
                 print()
                 sys.exit()
             selection = selection[i:]
-        shuffle(aCards, rng)
-        shuffle(bCards, rng)
+        shuffle(rng, aCards)
+        shuffle(rng, bCards)
 
 
 if len(sys.argv) < 2:
@@ -37,6 +37,6 @@ if len(sys.argv) < 2:
 # Main program
 rng = Random()
 try:
-    shuffle(int(sys.argv[1]), rng)
+    shuffle(rng, int(sys.argv[1]))
 except ValueError:
     badArgument()
