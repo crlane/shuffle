@@ -31,12 +31,14 @@ def shuffle(rng, n):
         shuffle(rng, bCards)
 
 
+def main():
+    rng = Random()
+    try:
+        shuffle(rng, int(sys.argv[1]))
+    except ValueError:
+        badArgument()
+
+
 if len(sys.argv) < 2:
     badArgument()
-
-# Main program
-rng = Random()
-try:
-    shuffle(rng, int(sys.argv[1]))
-except ValueError:
-    badArgument()
+main()
