@@ -1,5 +1,8 @@
 #!/usr/bin/python3
 
+# 2016 Luther Thompson
+# This program is public domain. See the file COPYING for details.
+
 from random import Random
 import sys
 
