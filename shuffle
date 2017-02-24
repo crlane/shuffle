@@ -6,40 +6,64 @@
 from random import Random
 import sys
 
+I_TO_LETTER = 'A', 'B'
+
+
+class CardPile:
+    '''The beginning of the list represents the bottom of the pile. The end
+    represents the top.'''
+
+    def __init__(self, iterable=()):
+        self._list = list(iterable)
+
+    def setMedian(self):
+        self._median = (min(self._list) + max(self._list)) / 2
+
+    def takeChunk(self):
+        i = len(self) - 1
+        last = self._targetPile(i)
+        while i > 0 and self._targetPile(i - 1) == last:
+            i -= 1
+        chunk = self._list[i:]
+        del self._list[i:]
+        return last, chunk
+
+    def __len__(self):
+        return len(self._list)
+
+    def shuffle(self, rng):
+        rng.shuffle(self._list)
+
+    def extend(self, iterable):
+        self._list.extend(iterable)
+
+    def _targetPile(self, i):
+        return self._list[i] >= self._median
+
 
 def badArgument():
     print('Requires 1 integer argument', file=sys.stderr)
     sys.exit(1)
 
 
-def shuffle(rng, n):
-    if n > 1:
-        print('Take pile of {0} cards.'.format(n))
-        aCards = n // 2
-        bCards = aCards + n % 2
-        selection = [True] * aCards + [False] * bCards
-        rng.shuffle(selection)
-        while selection:
-            i = 1
-            first = selection[0]
-            while i < len(selection) and selection[i] == first:
-                i += 1
-            try:
-                input('{0} to {1}'.format(i, 'A' if first else 'B'))
-            except EOFError:
-                print()
-                sys.exit()
-            selection = selection[i:]
-        shuffle(rng, aCards)
-        shuffle(rng, bCards)
-
-
 def main():
-    rng = Random()
     try:
-        shuffle(rng, int(sys.argv[1]))
+        deck = CardPile(range(int(sys.argv[1])))
     except ValueError:
         badArgument()
+    deck.shuffle(Random())
+    piles = [deck]
+    while piles:
+        hand = piles.pop()
+        print('Take pile of {0} cards.'.format(len(hand)))
+        hand.setMedian()
+        newPiles = [CardPile() for _ in range(2)]
+        while hand:
+            i, chunk = hand.takeChunk()
+            input('{0} to {1}'.format(len(chunk), I_TO_LETTER[i]))
+            newPiles[i].extend(chunk)
+        newPiles.reverse()
+        piles.extend(pile for pile in newPiles if len(pile) > 1)
 
 
 if len(sys.argv) < 2:
